@@ -1,0 +1,106 @@
+<service name="cpanspec">
+  <summary>Use of the cpanspec command</summary>
+  <description>Generate a spec file for a CPAN module</description>
+  <parameter name="noop">
+    <description>Do nothing. Needed, when we need only cpanspec build dependency</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="old">
+    <description>Be more compatible with old RHL/FC releases</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="source">
+    <description>Name of source. RegExp are allowed. Defaults to *.tar.bz2</description>
+    <required/>
+  </parameter>
+  <parameter name="count">
+    <description>Maximum number of sources which needs to work with (default: 1, 0 for infinitive)</description>
+    <required/>
+  </parameter>
+  <parameter name="license">
+    <description>Include generated license texts if absent in source</description>
+  </parameter>
+  <parameter name="noprefix">
+    <description>Don't add perl- prefix to package name</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="force">
+    <description>Force overwriting existing spec</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="packager">
+    <description>Name and email address of packager (for changelog)</description>
+  </parameter>
+  <parameter name="release">
+    <description>Release of package (defaults to 0)</description>
+  </parameter>
+  <parameter name="epoch">
+    <description>Epoch of package</description>
+  </parameter>
+  <parameter name="disttag">
+    <description>Disttag (defaults to %{?dist})</description>
+  </parameter>
+  <parameter name="srpm">
+    <description>Build a source RPM</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="build">
+    <description>Build source and binary RPMs</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="cpan">
+    <description>CPAN mirror URL</description>
+  </parameter>
+  <parameter name="verbose">
+    <description>Be more verbose</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="prefer-macros">
+    <description>Prefer macros over environment variables in the spec</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="follow">
+    <description>Process build dependencies</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="skip-changes">
+    <description>Do not create or update .changes file</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="generate-changes">
+    <description>Create or update .changes file</description>
+    <allowedvalue>enable</allowedvalue>
+    <allowedvalue>disable</allowedvalue>
+  </parameter>
+  <parameter name="version">
+    <description>Print the version number and exit</description>
+  </parameter>
+  <parameter name="filter-requires">
+    <description>Specify Requires to remove</description>
+  </parameter>
+  <parameter name="filter-provides">
+    <description>Specify Provides to remove</description>
+  </parameter>
+  <parameter name="add-requires">
+    <description>Add Requires for this item</description>
+  </parameter>
+  <parameter name="add-provides">
+    <description>Add Provides for this item</description>
+  </parameter>
+  <parameter name="add-buildrequires">
+    <description>Add BuildRequires for this item</description>
+  </parameter>
+  <parameter name="old-file">
+    <description>Old archive file for extraction of changelog difference</description>
+  </parameter>
+</service>

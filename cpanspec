@@ -1,0 +1,147 @@
+#!/usr/bin/perl
+
+=head1 NAME
+
+/usr/lib/obs/service/cpanspec - Generate a spec file for a CPAN module
+
+=head1 SYNOPSIS
+
+/usr/lib/obs/service/cpanspec [options]
+
+Options:
+
+   old              Be more compatible with old RHL/FC releases (default: disable)
+   license          Include generated license texts if absent in source (default: enable)
+   noprefix         Don't add perl- prefix to package name (default: disable)
+   force            Force overwriting existing spec (default: enable)
+   packager         Name and email address of packager (for changelog) (default: rpm)
+   release          Release of package (default: 0)
+   epoch            Epoch of package (default: 0)
+   disttag          Disttag (default: %{?dist})
+   srpm             Build a source rpm (default: disable)
+   build            Build source and binary rpms (default: disable)
+   cpan             CPAN mirror URL
+   verbose          Be more verbose (default: enable)
+   prefer-macros    Prefer macros over environment variables in the spec (default: disable)
+   follow             Process build dependencies (default: disable)
+   filter-requires    Specify Requires to remove
+   filter-provides    Specify Provides to remove
+   add-requires       Add Requires for this item
+   add-provides       Add Provides for this item
+   add-buildrequires  Add BuildRequires for this item
+   old-file=s         Old archive file for extraction of changelog difference
+   skip-changes       Do not create or update .changes file (default: enable)
+   source             Glob of source, or cpan module name (default: *.tar.gz)
+   outdir             Output directory
+   count              How much sources i need to parse (default: 1)
+   noop               Do nothing (default: disable)
+
+=cut
+
+
+use Cwd;
+
+use strict;
+use warnings;
+
+our $key;
+our $value;
+our $type;
+our $source;
+our $outdir;
+our $count;
+our $noop;
+
+defined ($count) || ($count = 1);
+
+my %options = (qw(
+--old                     b+f
+--license                 b+t
+--noprefix                b+f
+--force                   b+t
+--srpm                    b+f
+--build                   b+f
+--verbose                 b+t
+--prefer-macros           b+f
+--follow                  b+f
+--skip-changes            b+t
+--packager                s+rpm
+--release                 s-
+--epoch                   s-
+--disttag                 s-
+--cpan                    s-
+--old-file                s-
+),
+'--filter-requires'      ,[],
+'--filter-provides'      ,[],
+'--add-requires'         ,[],
+'--add-provides'         ,[],
+'--add-buildrequires'    ,[],
+'--outdir'        , \$outdir,
+'--count'          , \$count,
+'--noop'           ,  \$noop,
+'--source'               ,[],
+);
+
+while (@ARGV){
+  $key = shift @ARGV;
+  $value = shift @ARGV;
+  $type = $options{$key};
+  if (defined ($type)){
+    my $rf = ref($type);
+    if ($rf eq 'ARRAY'){
+      push @$type, $value;
+    } elsif ($rf eq 'SCALAR'){
+      $$type = $value;
+    } elsif ($type eq 'b+f'){
+      if ($value eq 'enable'){
+        $options{$key} = 'b+t';
+      }
+    } elsif ($type eq 'b+t'){
+      if (! $value eq 'disable'){
+        $options{$key} = 'b+f';
+      }
+    } elsif ($type =~ /^s/ ){
+      $options{$key} = "s+$value";
+    } elsif ($type eq '-'){
+    }
+  }
+}
+
+if ((defined($noop)) && ($noop eq 'enable')){
+} else {
+
+my $sources = delete($options{'--source'}) || [];
+if (! scalar(@$sources)){ 
+  push @$sources, '*.tar.gz';
+};
+
+for my $source (@$sources){
+  my @files = glob($source);
+  if (scalar(@files) > 0 && -e $files[0]){
+    push @ARGV, (map { Cwd::abs_path($_) } @files);
+  } else {
+    push @ARGV, $source;
+  }
+}
+
+if ($count > 0 && scalar @ARGV > $count){
+  @ARGV = @ARGV[0..$count-1];
+}
+
+while (($key, $type) = each(%options)){
+  if (ref($type) eq 'ARRAY'){
+    for (@$type){
+      push @ARGV, $key, $_;
+    }
+  } elsif ($type eq 'b+t'){
+    push @ARGV, $key;
+  } elsif ($type =~ /^s\+/ ){
+    push @ARGV, $key, substr($type, 2);
+  }
+}
+(defined($outdir)) && (chdir "$outdir");
+#use Data::Dumper;
+#print(Dumper(\@ARGV));
+do '/usr/bin/cpanspec';
+}
