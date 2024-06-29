@@ -1,0 +1,25 @@
+-------------------------------------------------------------------
+Fri Dec 15 13:34:39 CET 2023 - ro@suse.de
+
+- fix build with new rpm 
+
+-------------------------------------------------------------------
+Fri Jul 28 10:04:29 UTC 2023 - Dirk Stoecker <opensuse@dstoecker.de>
+
+- cleanup spec file
+
+-------------------------------------------------------------------
+Mon Nov 29 15:01:02 UTC 2010 - coolo@novell.com
+
+- be more careful with empty shell variables
+
+-------------------------------------------------------------------
+Mon Nov 29 09:38:48 UTC 2010 - coolo@novell.com
+
+- default to *.tar.bz2
+
+-------------------------------------------------------------------
+Sun Nov 28 14:02:29 UTC 2010 - coolo@novell.com
+
+- initial package
+
